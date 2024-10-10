@@ -81,7 +81,7 @@ def home_view(request, user_id):
     }
     return JsonResponse(data)
 
-
+@csrf_exempt
 def post_medida_habitacion(request, habitacion_id):
     if request.method != 'POST':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
