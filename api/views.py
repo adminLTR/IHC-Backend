@@ -96,7 +96,8 @@ def post_medida_habitacion(request, habitacion_id):
         if not temperatura or not humedad or not calidad_aire:
             return JsonResponse({'error': 'Campos faltantes en la solicitud'}, status=400)
         
-        medidas = MedidasHabitacion.objects.create(temperatura=temperatura, humedad=humedad, calidad_aire=calidad_aire, habitacion=habitacion_id)
+        habitacion = Habitacion.objects.get(pk=habitacion_id)
+        medidas = MedidasHabitacion.objects.create(temperatura=temperatura, humedad=humedad, calidad_aire=calidad_aire, habitacion=habitacion)
         
         return JsonResponse({
             'status' : 'success'
