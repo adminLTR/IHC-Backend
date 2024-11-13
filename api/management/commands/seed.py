@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from api.models import Casa, Habitacion, TipoDispositivo, Dispositivo, MedidasHabitacion, EnergiaDispositivo, ProgramacionDispositivo
 from faker import Faker
+from datetime import datetime, timedelta
 
 class Command(BaseCommand):
     help = 'Seed database with fake data'
@@ -23,17 +24,15 @@ class Command(BaseCommand):
         # Create Tipos de Dispositivo
         self.create_tipos_dispositivo(fake, 5)
 
-        # # Create Dispositivos
-        # self.create_dispositivos(fake, 30)
+        # Create Dispositivos
+        self.create_dispositivos(fake, 30)
 
-        # # Create MedidasHabitacion
-        # self.create_medidas_habitacion(fake, 50)
+        # Create MedidasHabitacion
+        self.create_medidas_habitacion(fake, 50)
 
-        # # Create EnergiaDispositivo
-        # self.create_energia_dispositivo(fake, 50)
+        # Create EnergiaDispositivo
+        self.create_energia_dispositivo(fake, 50)
 
-        # # Create ProgramacionDispositivo
-        # self.create_programacion_dispositivo(fake, 50)
 
     def clean_data(self):
         """ Remove old data from the database """
@@ -74,9 +73,9 @@ class Command(BaseCommand):
         tipos = ["luces", "camara", "microfono", "electrodomestico"]
         for tipo in tipos:
             TipoDispositivo.objects.create(
-                nombre=tipos,
+                nombre=tipo,
                 descripcion=fake.sentence(),
-                image="/media/assets/tipo_dispositivos/"+tipo
+                image="/assets/tipo_dispositivos/"+tipo+".png"
             )
 
     def create_dispositivos(self, fake, count):
@@ -86,44 +85,47 @@ class Command(BaseCommand):
             habitacion = random.choice(habitaciones)
             tipo_dispositivo = random.choice(tipos_dispositivo)
             Dispositivo.objects.create(
-                nombre=fake.word(),
-                estado=random.choice([True, False]),
-                intensidad=random.randint(0, 100),
+                nombre=fake.word() if tipo_dispositivo.nombre=='electrodomestico' else tipo_dispositivo.nombre,
                 pin=random.randint(1, 40),
-                color=fake.color_name(),
+                color=hex(random.randint(0, int("ffffff", 16))).strip('0x'),
                 tipo=tipo_dispositivo,
                 habitacion=habitacion
             )
 
     def create_medidas_habitacion(self, fake, count):
         habitaciones = Habitacion.objects.all()
-        for _ in range(count):
-            habitacion = random.choice(habitaciones)
-            MedidasHabitacion.objects.create(
-                temperatura=round(random.uniform(15.0, 30.0), 2),
-                humedad=round(random.uniform(30.0, 70.0), 2),
-                calidad_aire=round(random.uniform(0.0, 1.0), 2),
-                habitacion=habitacion
-            )
+        for habitacion in habitaciones:
+            for _ in range(100):
+                MedidasHabitacion.objects.create(
+                    temperatura=round(random.uniform(15.0, 30.0), 2),
+                    humedad=round(random.uniform(30.0, 70.0), 2),
+                    calidad_aire=round(random.uniform(0.0, 1.0), 2),
+                    habitacion=habitacion,
+                    fecha_hora=Command.fecha_hora_aleatoria('2024-01-01 00:00:00', '2024-12-31 23:59:59')
+                )
 
     def create_energia_dispositivo(self, fake, count):
         dispositivos = Dispositivo.objects.all()
-        for _ in range(count):
-            dispositivo = random.choice(dispositivos)
+        for dispositivo in dispositivos:
             EnergiaDispositivo.objects.create(
                 fecha=fake.date(),
                 energia=round(random.uniform(0.0, 100.0), 2),
                 dispositivo=dispositivo
             )
 
-    def create_programacion_dispositivo(self, fake, count):
-        dispositivos = Dispositivo.objects.all()
-        for _ in range(count):
-            dispositivo = random.choice(dispositivos)
-            ProgramacionDispositivo.objects.create(
-                inicio=fake.time(),
-                fin=fake.time(),
-                estado=random.choice([True, False]),
-                intensidad=random.randint(0, 100),
-                dispositivo=dispositivo
-            )
+    def fecha_hora_aleatoria(inicio, fin):
+        """
+        Genera una fecha y hora aleatoria entre dos fechas.
+        
+        :param inicio: Fecha inicial en formato 'YYYY-MM-DD HH:MM:SS'
+        :param fin: Fecha final en formato 'YYYY-MM-DD HH:MM:SS'
+        :return: Fecha y hora aleatoria en formato 'YYYY-MM-DD HH:MM:SS'
+        """
+        fecha_inicio = datetime.strptime(inicio, '%Y-%m-%d %H:%M:%S')
+        fecha_fin = datetime.strptime(fin, '%Y-%m-%d %H:%M:%S')
+        
+        diferencia = fecha_fin - fecha_inicio
+        segundos_aleatorios = random.randint(0, int(diferencia.total_seconds()))
+        
+        fecha_aleatoria = fecha_inicio + timedelta(seconds=segundos_aleatorios)
+        return fecha_aleatoria
