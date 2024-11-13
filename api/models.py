@@ -15,7 +15,7 @@ class Casa(models.Model):
         verbose_name_plural = "Casas"
 
 class Habitacion(models.Model):
-    nombre = models.CharField(max_length=100, null=False, blank=False, unique=True)
+    nombre = models.CharField(max_length=100, null=False, blank=False)
     piso = models.PositiveIntegerField()
     casa = models.ForeignKey(Casa, on_delete=models.CASCADE)
 

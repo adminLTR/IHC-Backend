@@ -18,22 +18,22 @@ class Command(BaseCommand):
         self.create_users_and_casas(fake, 10)
 
         # Create Habitaciones
-        self.create_habitaciones(fake, 20)
+        self.create_habitaciones(fake, 40)
 
         # Create Tipos de Dispositivo
         self.create_tipos_dispositivo(fake, 5)
 
-        # Create Dispositivos
-        self.create_dispositivos(fake, 30)
+        # # Create Dispositivos
+        # self.create_dispositivos(fake, 30)
 
-        # Create MedidasHabitacion
-        self.create_medidas_habitacion(fake, 50)
+        # # Create MedidasHabitacion
+        # self.create_medidas_habitacion(fake, 50)
 
-        # Create EnergiaDispositivo
-        self.create_energia_dispositivo(fake, 50)
+        # # Create EnergiaDispositivo
+        # self.create_energia_dispositivo(fake, 50)
 
-        # Create ProgramacionDispositivo
-        self.create_programacion_dispositivo(fake, 50)
+        # # Create ProgramacionDispositivo
+        # self.create_programacion_dispositivo(fake, 50)
 
     def clean_data(self):
         """ Remove old data from the database """
@@ -58,23 +58,25 @@ class Command(BaseCommand):
                 longitud=fake.longitude(),
                 latitud=fake.latitude(),
             )
+        User.objects.create_superuser('admin', '', '1234')
 
     def create_habitaciones(self, fake, count):
         casas = Casa.objects.all()
+        habitaciones = ("cocina", "comedor", "sala", "dormitorio principal", "dormitorio secundario", "baño", "cuarto de lavado", "garaje", "estudio", "terraza")
         for _ in range(count):
-            casa = random.choice(casas)
             Habitacion.objects.create(
-                nombre=fake.word(),
+                nombre=random.choice(habitaciones),
                 piso=random.randint(1, 3),
-                casa=casa
+                casa=random.choice(casas)
             )
 
     def create_tipos_dispositivo(self, fake, count):
-        for _ in range(count):
+        tipos = ["luces", "camara", "microfono", "electrodomestico"]
+        for tipo in tipos:
             TipoDispositivo.objects.create(
-                nombre=fake.word(),
+                nombre=tipos,
                 descripcion=fake.sentence(),
-                image=fake.file_path(extension='jpg')
+                image="/media/assets/tipo_dispositivos/"+tipo
             )
 
     def create_dispositivos(self, fake, count):
