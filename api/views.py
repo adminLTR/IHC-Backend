@@ -51,7 +51,8 @@ def home_view(request, user_id):
     if request.method != 'GET':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-    user = User.objects.get(id=user_id)
+    # user = User.objects.get(id=user_id)
+    user = User.objects.all()[0]
     if not user:
         return JsonResponse({'error': 'User not found'}, status=400)
     
