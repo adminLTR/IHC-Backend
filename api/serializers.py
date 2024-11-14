@@ -16,13 +16,13 @@ class CasaSerializer(serializers.ModelSerializer):
 class HabitacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habitacion
-        fields = ['nombre', 'piso']
+        fields = ['id', 'nombre', 'piso']
 
 
 class TipoDispositivoSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoDispositivo
-        fields = ['nombre', 'descripcion', 'image']
+        fields = ['id', 'nombre', 'descripcion', 'image']
 
 
 class DispositivoSerializer(serializers.ModelSerializer):

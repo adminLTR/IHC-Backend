@@ -14,6 +14,6 @@ router.register(r'programaciones-dispositivos', ProgramacionDispositivoViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('users/<int:user_id>/casas/', home_view, name='home_view'),
-    path('habitaciones/medidas/<int:habitacion_id>/', post_medida_habitacion, name='post_medidas')
+    path('dispositivos/all', home_view, name='home_view'),
+    path('habitaciones/medidas', post_medida_habitacion, name='post_medidas')
 ]

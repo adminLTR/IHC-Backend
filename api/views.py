@@ -2,10 +2,11 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from .serializers import *
 from .models import *
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from rest_framework.response import Response
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -20,6 +21,16 @@ class CasaViewSet(viewsets.ModelViewSet):
 class HabitacionViewSet(viewsets.ModelViewSet):
     queryset = Habitacion.objects.all()
     serializer_class = HabitacionSerializer
+
+    def create(self, request, *args, **kwargs):
+        user = User.objects.first()
+        casa = Casa.objects.get(usuario=user)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(casa=casa)  # Asignar la primera categoría
+        
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class TipoDispositivoViewSet(viewsets.ModelViewSet):
@@ -52,7 +63,7 @@ def home_view(request, user_id):
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
     # user = User.objects.get(id=user_id)
-    user = User.objects.all()[0]
+    user = User.objects.first()
     if not user:
         return JsonResponse({'error': 'User not found'}, status=400)
     
@@ -97,7 +108,9 @@ def post_medida_habitacion(request, habitacion_id):
         if not temperatura or not humedad or not calidad_aire:
             return JsonResponse({'error': 'Campos faltantes en la solicitud'}, status=400)
         
-        habitacion = Habitacion.objects.get(pk=habitacion_id)
+        user = User.objects.first()
+        habitacion = Habitacion.objects.get(user=user)
+
         medidas = MedidasHabitacion.objects.create(temperatura=temperatura, humedad=humedad, calidad_aire=calidad_aire, habitacion=habitacion)
         
         return JsonResponse({

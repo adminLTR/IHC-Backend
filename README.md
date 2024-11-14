@@ -39,3 +39,13 @@ Para levantar el proyecto, debes tener todas las dependencias instaladas previam
 Si no tienes ya previamente la base de datos instalada, debes correr las migraciones, solo lo harás una vez o cuando el *desarrollador backend* haga algún cambio grande, así que dentro de nuestra carpeta en la consola y con el entorno virtual encendido colocamos el siguiente comando: **python manage.py migrate**. Esto creará y/o modelará la base de datos la base de datos.
 
 Si ya tienes la base de datos migrada, simplemente corre el comando **python manage.py runserver 0.0.0.0:8000**, esto creará un servidor para el backend que podrá intercambiar datos con el frontend
+
+
+## Endpoints
+### (GET) dispositivos/all 
+Obtiene todos los dispositivos de todas las habitaciones de todas la casa del usuario con id=user_id
+
+### (POST) habitaciones/medidas
+Envia datos de las medidas de la habitacion con id=habitacion_id. Recibe temperatura, humedad y aire
+
+### (POST) /habitaciones
