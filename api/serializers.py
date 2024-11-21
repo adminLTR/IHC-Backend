@@ -28,7 +28,7 @@ class TipoDispositivoSerializer(serializers.ModelSerializer):
 class DispositivoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dispositivo
-        fields = ['nombre', 'estado', 'intensidad', 'pin', 'color', 'tipo', 'habitacion']
+        fields = '__all__'
 
 
 class MedidasHabitacionSerializer(serializers.ModelSerializer):
