@@ -58,7 +58,8 @@ class ProgramacionDispositivoViewSet(viewsets.ModelViewSet):
     serializer_class = ProgramacionDispositivoSerializer
 
 
-def home_view(request, user_id):
+# def home_view(request, user_id):
+def home_view(request):
     if request.method != 'GET':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
@@ -94,7 +95,8 @@ def home_view(request, user_id):
     return JsonResponse(data)
 
 @csrf_exempt
-def post_medida_habitacion(request, habitacion_id):
+# def post_medida_habitacion(request, habitacion_id):
+def post_medida_habitacion(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
