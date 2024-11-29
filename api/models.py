@@ -44,10 +44,13 @@ class Dispositivo(models.Model):
     nombre = models.CharField(max_length=100)
     estado = models.BooleanField(default=False)
     intensidad = models.PositiveIntegerField(default=100)
-    pin = models.PositiveIntegerField(default=1)
+    pin = models.PositiveIntegerField(default=1, null=True)
     color = models.CharField(max_length=13, null=True)
     tipo = models.ForeignKey(TipoDispositivo, on_delete=models.PROTECT)
     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE)
+    volumen = models.FloatField(default=0, null=True)
+    velocidad = models.PositiveSmallIntegerField(default=0, null=True)
+    angulo = models.PositiveIntegerField(default=0, null=True)
 
     def __str__(self):
         return f"{self.nombre} / {self.habitacion}"
