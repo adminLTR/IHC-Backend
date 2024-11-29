@@ -83,7 +83,8 @@ def home_view(request, user_id):
                     {
                         'id' : dispositivo.id,
                         'nombre': dispositivo.nombre,
-                        'imagen' : dispositivo.tipo.image.url
+                        'imagen' : dispositivo.tipo.image.url,
+                        'tipo' : dispositivo.tipo.nombre
                     }
                     for dispositivo in Dispositivo.objects.filter(habitacion_id = habitacion.id)
                 ]
