@@ -22,6 +22,10 @@ class Habitacion(models.Model):
     def __str__(self):
         return f"{self.casa}({self.piso}) - {self.nombre}"
 
+    class Meta:
+        verbose_name = "Habitacion"
+        verbose_name_plural = "Habitaciones"
+
 class TipoDispositivo(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(null=True)
@@ -39,6 +43,10 @@ class TipoDispositivo(models.Model):
     def __str__(self):
         return self.nombre
 
+    class Meta:
+        verbose_name = "Tipo de Dispositivo"
+        verbose_name_plural = "Tipos de Dispositivos"
+
 
 class Dispositivo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -55,6 +63,10 @@ class Dispositivo(models.Model):
     def __str__(self):
         return f"{self.nombre} / {self.habitacion}"
 
+    class Meta:
+        verbose_name = "Dispositivo"
+        verbose_name_plural = "Dispositivos"
+
 class MedidasHabitacion(models.Model):
     temperatura = models.DecimalField(max_digits=5, decimal_places=2)
     humedad = models.DecimalField(max_digits=5, decimal_places=2)
@@ -62,10 +74,18 @@ class MedidasHabitacion(models.Model):
     fecha_hora = models.DateTimeField(auto_now_add=True)
     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE, default=1)
 
+    class Meta:
+        verbose_name = "Medida de Habitacion"
+        verbose_name_plural = "Medidas de Habitaciones"
+
 class EnergiaDispositivo(models.Model):
     fecha = models.DateField()
     energia = models.DecimalField(max_digits=5, decimal_places=2)
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Energía de "
+        verbose_name_plural = "Energía de dispositivos"
 
 class ProgramacionDispositivo(models.Model):
     inicio = models.TimeField()
@@ -73,3 +93,7 @@ class ProgramacionDispositivo(models.Model):
     estado = models.BooleanField(default=True)
     intensidad = models.IntegerField(default=100)
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Programación de Dispositivo"
+        verbose_name_plural = "Programación de Dispositivos"
